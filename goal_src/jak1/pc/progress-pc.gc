@@ -157,6 +157,12 @@
             :name (text-id quit-game)
             :scale #t
             :param3 (game-option-menu quit))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id exit-to-desktop)
+            :scale #t
+            :param3 (game-option-menu quit-title))
        (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *main-options-secrets*
@@ -212,6 +218,12 @@
             :name (text-id quit-game)
             :scale #t
             :param3 (game-option-menu quit))
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id exit-to-desktop)
+            :scale #t
+            :param3 (game-option-menu quit-title))
        (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
 
 (define *game-options-pc*

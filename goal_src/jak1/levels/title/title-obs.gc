@@ -17,7 +17,9 @@
    (main-joint  joint-mod)
    (anim        spool-anim)
    (next-anim   spool-anim)
-   (done?       symbol))
+   (done?       symbol)
+   (title-skip-ready? symbol)
+   (title-skipped? symbol))
   (:state-methods
    idle
    startup
@@ -148,6 +150,19 @@
   (go-virtual idle)
   (none))
 
+(defun logo-title-skip? ((actor process-drawable))
+  "Skip the title animation on a fresh press, leaving the flyover intact."
+  (let ((title (the-as logo actor)))
+    ;; Releasing first prevents the Naughty Dog skip from skipping this too.
+    (when (not (cpad-hold? 0 start circle x))
+      (set! (-> title title-skip-ready?) #t))
+    (cond
+      ((and (-> title title-skip-ready?) (cpad-pressed? 0 start circle x))
+       (set! (-> title title-skipped?) #t)
+       (cpad-clear! 0 start circle x)
+       #t)
+      (else #f))))
+
 (defstate startup (logo)
   :virtual #t
   :event
@@ -218,10 +233,12 @@
                   (400 display-level village1 display)
                   (400 save)
                   (500 set! *spawn-actors* #t))))
+      (set! (-> self title-skip-ready?) #f)
+      (set! (-> self title-skipped?) #f)
       (ja-play-spooled-anim (-> self anim)
                             (the-as art-joint-anim #f)
                             (the-as art-joint-anim #f)
-                            (the-as (function process-drawable symbol) false-func))
+                            logo-title-skip?)
       (set! *spawn-actors* #f)
       (add-setting! 'process-mask 'set 0.0 (process-mask progress))
       (apply-settings *setting-control*)
@@ -232,10 +249,14 @@
       (ja-channel-set! 1)
       ;; og:preserve-this PAL patch here
       (ja-no-eval :group! (-> self draw art-group data 6) :num! (seek!) :frame-num 0.0)
+      (when (-> self title-skipped?)
+        (ja-no-eval :num! max))
       (until (ja-done? 0)
         (logior! (-> self skel status) (janim-status spool))
         (suspend)
-        (if (not (paused?)) (ja :num! (seek!))))
+        (cond
+          ((logo-title-skip? self) (ja :num! max))
+          ((not (paused?)) (ja :num! (seek!)))))
       (set! (-> self anim) (-> self next-anim))
       (set! (-> self next-anim)
             (new 'static
