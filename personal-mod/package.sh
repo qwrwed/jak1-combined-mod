@@ -13,7 +13,7 @@ trap 'rm -f -- "$mod_partial"' EXIT
 # Runtime assets only: no extracted ISO, saves, build logs, or source checkout.
 tar -czf "$mod_partial" -C "$mod_build" \
   gk personal-mod/launch.sh data/out/jak1/iso data/out/jak1/fr3 \
-  data/game/assets data/game/graphics/opengl_renderer/shaders
+  data/game/assets data/game/graphics/opengl_renderer/shaders data/goal_src/user
 gzip -t -- "$mod_partial"
 mv -- "$mod_partial" "$mod_archive"
 printf 'Saved %s\n' "$mod_archive"

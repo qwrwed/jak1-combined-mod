@@ -3481,7 +3481,9 @@
               (progress-screen monitor))
              (hide-progress-icons)
              (draw-options self 115 25 0.82))
-            (((progress-screen settings) (progress-screen settings-title)) (hide-progress-icons) (draw-options self 115 25 0.78))
+            ;; Leave room for Exit to Desktop alongside cheat/mod menu entries.
+            (((progress-screen settings)) (hide-progress-icons) (draw-options self 115 20 0.78))
+            (((progress-screen settings-title)) (hide-progress-icons) (draw-options self 115 25 0.78))
             (((progress-screen misc-options)) (hide-progress-icons) (draw-options self 115 25 0.79))
             (((progress-screen music-player)) (hide-progress-icons) (draw-options self 128 21 0.82))
             (((progress-screen flava-player)) (hide-progress-icons) (draw-options self 128 21 0.82))
