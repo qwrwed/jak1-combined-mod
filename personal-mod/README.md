@@ -56,3 +56,16 @@ release into the older mod without reviewing compatibility.
 - The PNGs are imported unchanged into `custom_assets/jak1/texture_replacements`.
 
 Personal use. No original game assets or generated game files are committed.
+
+## Runtime archive
+
+After a full build, make a personal runtime archive with:
+
+```bash
+bash personal-mod/package.sh /path/to/completed/build /path/to/new/archive.tar.gz
+```
+
+This includes the executable, compiled levels/audio, HUD, and launch script.
+Extract it into a new folder on an x86-64 Linux gaming device and run
+`bash personal-mod/launch.sh` there. Unlike the build directory, this archive
+does not depend on the original extracted ISO directory. It is not committed.
