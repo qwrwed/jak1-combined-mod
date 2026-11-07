@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "sourceName": "Jak 1 Combined Mod",
+  "lastUpdated": "2026-11-07T16:03:27Z",
+  "mods": {
+    "jak1-combined-mod-normal": {
+      "displayName": "Jak 1 Combined Mod (Normal)",
+      "description": "Refreshed HUD textures, a skippable Jak and Daxter title cinematic, and Exit to Desktop in the pause settings.",
+      "authors": ["Codex (AI-assisted)"],
+      "tags": ["gameplay-mod", "texture-pack"],
+      "supportedGames": ["jak1"],
+      "websiteUrl": "https://github.com/qwrwed/jak1-combined-mod",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishedDate": "2026-11-07T15:39:01Z",
+          "supportedGames": ["jak1"],
+          "assets": {
+            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-v0.1.0/jak1-combined-mod-normal.tar.gz"
+          }
+        }
+      ]
+    },
+    "jak1-combined-mod-jetboard": {
+      "displayName": "Jak 1 Combined Mod (Jetboard)",
+      "description": "The Refreshed HUD, skippable Jak and Daxter title cinematic, and pause-menu Exit to Desktop, plus JET-Board Legacy with a rigid stowed-board attachment fix.",
+      "authors": ["Codex (AI-assisted)"],
+      "tags": ["gameplay-mod", "texture-pack"],
+      "supportedGames": ["jak1"],
+      "websiteUrl": "https://github.com/qwrwed/jak1-combined-mod",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishedDate": "2026-11-07T15:39:01Z",
+          "supportedGames": ["jak1"],
+          "assets": {
+            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-v0.1.0/jak1-combined-mod-jetboard.tar.gz"
+          }
+        }
+      ]
+    }
+  },
+  "texturePacks": {}
+}
