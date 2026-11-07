@@ -58,15 +58,29 @@ builder and attachment fix.
 
 Personal use. No original game assets or generated game files are committed.
 
-## Runtime archive
+## Install through the OpenGOAL Launcher
 
-After a full build, make a personal runtime archive with:
+Add this Mod Source URL in the launcher under **Settings → Mods**:
+
+```text
+https://raw.githubusercontent.com/qwrwed/jak1-combined-mod/main/mods.json
+```
+
+On the Jak 1 page, open **Features → Mods** and install either **Jak 1
+Combined Mod (Normal)** or **Jak 1 Combined Mod (Jetboard)**. The source
+currently provides Linux x86-64 builds. The two variants use separate
+launcher settings and save directories.
+
+## Standalone runtime archive
+
+After a full build, a runtime archive can also be made with:
 
 ```bash
 bash personal-mod/package.sh /path/to/completed/build /path/to/new/archive.tar.gz
 ```
 
 This includes the executable, compiled levels/audio, HUD, and launch script.
-Extract it into a new folder on an x86-64 Linux gaming device and run
-`bash personal-mod/launch.sh` there. Unlike the build directory, this archive
-does not depend on the original extracted ISO directory. It is not committed.
+The OpenGOAL Launcher installs its release archives directly. For standalone
+use, extract an archive into a new folder on an x86-64 Linux device and run
+`bash personal-mod/launch.sh` there. It does not depend on the original
+extracted ISO directory. Archives are not committed.
