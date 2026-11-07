@@ -36,5 +36,5 @@ if [[ ${4:-} == --code-only ]]; then
 else
   ./extractor --game jak1 --proj-path "$mod_output/data" --disable-ansi \
     --folder --decompile --compile "$mod_iso" 2>&1 | tee build.log
-  printf '%s\n' 'Build complete. Launch with: bash personal-mod/launch.sh'
+  printf '%s\n' 'Build complete. For installation, package the matching tools and use the OpenGOAL Launcher.'
 fi

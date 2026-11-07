@@ -26,7 +26,6 @@ assets with the bundled HUD textures.
 
 ```bash
 bash personal-mod/build.sh /path/to/matching/tools /path/to/extracted/jak1 /path/to/new/build
-bash /path/to/new/build/personal-mod/launch.sh
 ```
 
 `TOOLS_DIR` contains `gk`, `goalc`, and `extractor`. The extracted Jak 1 directory
@@ -38,9 +37,8 @@ extracted directory available. This is a local build, not a portable release.
 For a compiler-only check, append `--code-only`. That verifies GOAL compilation
 but does not produce a playable game or verify textures and in-game behavior.
 
-The launch scripts use separate config directories under
-`~/.config/jak1-personal/normal` and `~/.config/jak1-personal/jetboard`, respectively.
-They do not import or modify existing saves.
+The OpenGOAL Launcher manages a separate settings and save directory for each
+installed mod variant.
 
 ## Shared changes
 
@@ -71,16 +69,20 @@ Combined Mod (Normal)** or **Jak 1 Combined Mod (Jetboard)**. The source
 currently provides Linux x86-64 builds. The two variants use separate
 launcher settings and save directories.
 
-## Standalone runtime archive
+## Launcher package
 
-After a full build, a runtime archive can also be made with:
+Package this branch's sources and its matching executables with:
 
 ```bash
-bash personal-mod/package.sh /path/to/completed/build /path/to/new/archive.tar.gz
+bash personal-mod/package.sh /path/to/matching/tools /path/to/new/archive.tar.gz
 ```
 
-This includes the executable, compiled levels/audio, HUD, and launch script.
-The OpenGOAL Launcher installs its release archives directly. For standalone
-use, extract an archive into a new folder on an x86-64 Linux device and run
-`bash personal-mod/launch.sh` there. It does not depend on the original
-extracted ISO directory. Archives are not committed.
+The archive contains `gk`, `goalc`, `extractor`, and the source, configuration,
+shader and custom asset inputs under `data/`. The Launcher uses the user's
+extracted game to decompile and compile the mod during installation. Original
+game data, generated levels/audio, saves and standalone launch wrappers are
+excluded. Archives are not committed.
+
+For an existing Steam shortcut, use the installed mod's `gk` and working
+directory. The mod page's copied launch command supplies the matching options
+and settings path. Keep the existing Steam entry when updating its fields.
