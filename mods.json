@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "sourceName": "Jak 1 Combined Mod",
-  "lastUpdated": "2026-11-07T16:03:27Z",
+  "lastUpdated": "2026-11-07T21:08:25Z",
   "mods": {
     "jak1-combined-mod-normal": {
       "displayName": "Jak 1 Combined Mod (Normal)",
@@ -12,11 +12,11 @@
       "websiteUrl": "https://github.com/qwrwed/jak1-combined-mod",
       "versions": [
         {
-          "version": "0.1.0",
-          "publishedDate": "2026-11-07T15:39:01Z",
+          "version": "0.1.1",
+          "publishedDate": "2026-11-07T21:08:25Z",
           "supportedGames": ["jak1"],
           "assets": {
-            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-v0.1.0/jak1-combined-mod-normal.tar.gz"
+            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-v0.1.1/jak1-combined-mod-normal.tar.gz"
           }
         }
       ]
@@ -30,11 +30,11 @@
       "websiteUrl": "https://github.com/qwrwed/jak1-combined-mod",
       "versions": [
         {
-          "version": "0.1.0",
-          "publishedDate": "2026-11-07T15:39:01Z",
+          "version": "0.1.1",
+          "publishedDate": "2026-11-07T21:08:25Z",
           "supportedGames": ["jak1"],
           "assets": {
-            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-v0.1.0/jak1-combined-mod-jetboard.tar.gz"
+            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-v0.1.1/jak1-combined-mod-jetboard.tar.gz"
           }
         }
       ]
