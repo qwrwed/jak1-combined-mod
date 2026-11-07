@@ -797,6 +797,8 @@
   (input-opts-controller-pressure-sensitivity #x1618)
   (input-opts-analog-sensitivity #x1619)
   (exit-to-desktop #x161a)
+  (mod-options #x2004)
+  (skip-fuel-cell-anim #x2005)
   ;; GAME-TEXT-ID ENUM ENDS
   )
 

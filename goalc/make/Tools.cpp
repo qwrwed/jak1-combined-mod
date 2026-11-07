@@ -5,6 +5,7 @@
 #include "common/util/FileUtil.h"
 
 #include "goalc/build_actor/jak1/build_actor.h"
+#include "goalc/build_sbk/build_sbk.h"
 #include "goalc/build_level/jak1/build_level.h"
 #include "goalc/build_level/jak2/build_level.h"
 #include "goalc/build_level/jak3/build_level.h"
@@ -407,6 +408,33 @@ bool BuildActor2Tool::run(const ToolInput& task, const PathMap& path_map) {
     params.joint_channel = std::stoi(task.input.at(7));
   }
   return jak2::run_build_actor(task.input.at(0), task.output.at(0), params);
+}
+
+BuildSbkTool::BuildSbkTool() : Tool("build-sbk") {}
+
+bool BuildSbkTool::needs_run(const ToolInput& task, const PathMap& path_map) {
+  if (task.input.empty()) {
+    throw std::runtime_error("[build-sbk] Expected a metadata directory");
+  }
+  bool force = task.input.size() > 1 && task.input.at(1) == "#t";
+  std::vector<std::string> deps{task.input.at(0)};
+  return force || Tool::needs_run({deps, deps, task.output, task.arg}, path_map);
+}
+
+bool BuildSbkTool::run(const ToolInput& task, const PathMap&) {
+  if (task.input.empty()) {
+    throw std::runtime_error("[build-sbk] Expected a metadata directory");
+  }
+  sbk::BuildOptions opts;
+  if (task.input.size() > 2) {
+    opts.bank_id = std::stoi(task.input.at(2));
+  }
+  if (task.input.size() > 3) {
+    opts.jak1_format = task.input.at(3) == "#t";
+  }
+  sbk::create_sbk_from_dir(file_util::get_file_path({task.input.at(0)}),
+                         file_util::get_file_path({task.output.at(0)}), opts);
+  return true;
 }
 
 BuildActor3Tool::BuildActor3Tool() : Tool("build-actor3") {}

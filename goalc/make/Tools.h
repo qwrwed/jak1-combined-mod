@@ -113,6 +113,13 @@ class BuildActor2Tool : public Tool {
   goos::Reader m_reader;
 };
 
+class BuildSbkTool : public Tool {
+ public:
+  BuildSbkTool();
+  bool run(const ToolInput& task, const PathMap& path_map) override;
+  bool needs_run(const ToolInput& task, const PathMap& path_map) override;
+};
+
 class BuildActor3Tool : public Tool {
  public:
   BuildActor3Tool();

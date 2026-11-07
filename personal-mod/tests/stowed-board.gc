@@ -1,0 +1,65 @@
+;; Run against an isolated game with the matching compiler after all-code.
+(in-package goal)
+
+(defun personal-board-matrix-close? ((actual matrix) (expected matrix))
+  (let ((ok #t))
+    (dotimes (i 16)
+      (when (> (fabs (- (-> actual data i) (-> expected data i))) 0.1)
+        (set! ok #f)))
+    ok))
+
+(defun personal-board-attachment-test ()
+  (let ((chest-rest (new 'stack-no-clear 'matrix))
+        (offset (new 'stack-no-clear 'matrix))
+        (strap-rest (new 'stack-no-clear 'matrix))
+        (chest-bind (new 'stack-no-clear 'matrix))
+        (strap-bind (new 'stack-no-clear 'matrix))
+        (chest-world (new 'stack-no-clear 'matrix))
+        (actual (new 'stack-no-clear 'matrix))
+        (expected (new 'stack-no-clear 'matrix))
+        (ok #t))
+    ;; A nontrivial reference pose and a known, fixed back attachment.
+    (matrix-rotate-y! chest-rest (degrees 30))
+    (set-vector! (-> chest-rest vector 3) (meters 2) (meters -1) (meters 3) 1.0)
+    (matrix-rotate-x! offset (degrees 35))
+    (set-vector! (-> offset vector 3) (meters 0.02) (meters 0.225) (meters -0.266) 1.0)
+    (matrix*! strap-rest chest-rest offset)
+    (matrix-4x4-inverse! chest-bind chest-rest)
+    (matrix-4x4-inverse! strap-bind strap-rest)
+
+    ;; At rest, the new attachment must exactly preserve the reference position
+    ;; and rotation, rather than dropping the board at the chest's origin.
+    (board-stowed-matrix! actual chest-rest chest-bind strap-bind)
+    (when (not (personal-board-matrix-close? actual strap-rest))
+      (format #t "STOWED_BOARD_TEST_FAIL reference placement~%")
+      (set! ok #f))
+
+    ;; The same local attachment must hold through torso turns, bends, and
+    ;; translations. Different rotation axes catch multiplication-order errors.
+    (dotimes (pose 6)
+      (case (mod pose 3)
+        ((0) (matrix-rotate-x! chest-world (degrees 65)))
+        ((1) (matrix-rotate-y! chest-world (degrees -80)))
+        ((2) (matrix-rotate-z! chest-world (degrees 40))))
+      (set-vector! (-> chest-world vector 3)
+                   (* (the float pose) (meters 1.2))
+                   (meters 0.8)
+                   (* (the float pose) (meters -0.7))
+                   1.0)
+      (matrix*! expected chest-world offset)
+      (board-stowed-matrix! actual chest-world chest-bind strap-bind)
+      (when (not (personal-board-matrix-close? actual expected))
+        (format #t "STOWED_BOARD_TEST_FAIL torso pose ~D~%" pose)
+        (set! ok #f)))
+
+    ;; Ensure the fixture actually distinguishes an incorrectly reversed bind
+    ;; relationship, rather than passing only commuting/identity transforms.
+    (board-stowed-matrix! actual chest-world strap-bind chest-bind)
+    (when (personal-board-matrix-close? actual expected)
+      (format #t "STOWED_BOARD_TEST_FAIL insensitive fixture~%")
+      (set! ok #f))
+    (when ok
+      (format #t "STOWED_BOARD_TEST_PASS reference placement and six torso poses~%"))
+    ok))
+
+(personal-board-attachment-test)

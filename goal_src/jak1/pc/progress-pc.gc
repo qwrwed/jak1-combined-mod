@@ -110,11 +110,25 @@
 ;;  MENU OPTIONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define *mod-options*
+  (new 'static
+       'boxed-array
+       :type
+       game-option
+       (new 'static 'game-option :option-type (game-option-type on-off) :name (text-id skip-fuel-cell-anim) :scale #t)
+       (new 'static 'game-option :option-type (game-option-type button) :name (text-id back) :scale #t)))
+
 (define *main-options-pc*
   (new 'static
        'boxed-array
        :type
        game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id mod-options)
+            :scale #t
+            :param3 (game-option-menu mod-options))
        (new 'static
             'game-option
             :option-type (game-option-type menu)
@@ -170,6 +184,12 @@
        'boxed-array
        :type
        game-option
+       (new 'static
+            'game-option
+            :option-type (game-option-type menu)
+            :name (text-id mod-options)
+            :scale #t
+            :param3 (game-option-menu mod-options))
        (new 'static
             'game-option
             :option-type (game-option-type menu)
@@ -1131,7 +1151,7 @@
                                   czech
                                   croatian
                                   galician
-								  bosnian))
+                                  bosnian))
 
 (define *text-languages*
   (static-text-list-array english
@@ -1154,7 +1174,7 @@
                           czech
                           croatian
                           galician
-						  bosnian))
+                          bosnian))
 
 (define *subtitle-languages*
   (static-text-list-array english
@@ -1173,7 +1193,7 @@
                           czech
                           croatian
                           galician
-						  bosnian))
+                          bosnian))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  DYNAMIC MENU THINGS
@@ -2070,6 +2090,8 @@
     (cond
       ((> max-refresh-rate 100) (set! *carousell-frame-rate* *carousell-frame-rate-150fps*))
       ((> max-refresh-rate 60) (set! *carousell-frame-rate* *carousell-frame-rate-100fps*))))
+  ;; og:j1-board added
+  (set! (-> *options-remap* (progress-screen mod-options)) *mod-options*)
   (set! (-> *options-remap* (progress-screen sound-settings)) *sound-options-pc*)
   (set! (-> *options-remap* (progress-screen memcard-no-space)) *ok-options*)
   (set! (-> *options-remap* (progress-screen memcard-not-inserted)) *ok-options*)
@@ -2182,6 +2204,8 @@
   (set! (-> *sound-options-pc* 0 value-to-modify) (&-> *pc-settings* memcard-volume-sfx))
   (set! (-> *sound-options-pc* 1 value-to-modify) (&-> *pc-settings* memcard-volume-music))
   (set! (-> *sound-options-pc* 2 value-to-modify) (&-> *pc-settings* memcard-volume-dialog))
+  ;; og:j1-board added
+  (set! (-> *mod-options* 0 value-to-modify) (&-> *pc-settings* skip-fuel-cell-anim?))
   (dotimes (i (1- (-> *cheats* length)))
     (set! (-> *cheats* i value-to-modify) (&-> *progress-carousell* symbol-backup)))
   ;(set! (-> *sound-options-pc* 3 value-to-modify) (&-> *pc-settings* music-fadein?))
@@ -2328,7 +2352,8 @@
                 (when sound?
                   ;; if the option has an explicit on-change function, call it
                   (when (nonzero? (-> options (-> obj option-index) on-change))
-                    ((-> options (-> obj option-index) on-change) (-> (the-as (pointer float) (-> options (-> obj option-index) value-to-modify)))))
+                    ((-> options (-> obj option-index) on-change)
+                     (-> (the-as (pointer float) (-> options (-> obj option-index) value-to-modify)))))
                   (let ((vol 100.0))
                     (case (-> options (-> obj option-index) name)
                       (((text-id music-volume) (text-id speech-volume))
@@ -2410,7 +2435,8 @@
                 (when sound?
                   ;; if the option has an explicit on-change function, call it
                   (when (nonzero? (-> options (-> obj option-index) on-change))
-                    ((-> options (-> obj option-index) on-change) (-> (the-as (pointer float) (-> options (-> obj option-index) value-to-modify)))))
+                    ((-> options (-> obj option-index) on-change)
+                     (-> (the-as (pointer float) (-> options (-> obj option-index) value-to-modify)))))
                   (let ((vol 100.0))
                     (case (-> options (-> obj option-index) name)
                       (((text-id music-volume) (text-id speech-volume))
@@ -2640,9 +2666,7 @@
                     (true! (-> *pc-settings* use-vis?))
                     (set! (-> *setting-control* default aspect-ratio) 'aspect16x9)
                     (set-aspect-ratio 'aspect16x9))
-                   (else
-                    (set! (-> *setting-control* default aspect-ratio) 'aspect4x3)
-                    (set-aspect! *pc-settings* newx newy))))
+                   (else (set! (-> *setting-control* default aspect-ratio) 'aspect4x3) (set-aspect! *pc-settings* newx newy))))
                (cpad-clear! 0 x)
                (cpad-clear! 0 circle)
                (sound-play "cursor-options")
@@ -3117,7 +3141,11 @@
                      ;; this ugliness is just decompiler stuff. all it does is fade the alpha according to value.
                      (let* ((v1-82 (the-as uint #x8000ffff))
                             ;; calculate the percentage of the bar based on the actual range, instead of assuming 0-100
-                            (percentage (lerp-scale 0.0 1.0 (-> (the-as (pointer float) (-> options index value-to-modify))) (-> options index param1) (-> options index param2)))
+                            (percentage (lerp-scale 0.0
+                                                    1.0
+                                                    (-> (the-as (pointer float) (-> options index value-to-modify)))
+                                                    (-> options index param1)
+                                                    (-> options index param2)))
                             (a0-34 (logior (logand v1-82 -256) (shr (shl (the int (+ 64.0 (* 191.0 percentage))) 56) 56)))
                             (color (logior (logand a0-34 -65281) (shr (shl (shr (shl a0-34 56) 56) 56) 48))))
                        (draw-percent-bar (- 75 (-> obj left-x-offset)) (+ y-off 8) percentage (the-as rgba color))
@@ -3466,6 +3494,8 @@
                (unk #t)
                (stats? #f))
           (case (-> self display-state)
+            ;; og:j1-board added
+            (((progress-screen mod-options)) (hide-progress-icons) (draw-options self 115 25 0.70))
             (((progress-screen fuel-cell)) (set! stats? #t) (draw-fuel-cell-screen self a1-0))
             (((progress-screen money)) (set! stats? #t) (draw-money-screen self a1-0))
             (((progress-screen buzzer)) (set! stats? #t) (draw-buzzer-screen self a1-0))

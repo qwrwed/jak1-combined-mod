@@ -3,7 +3,8 @@
 Two local branches produce separately launchable builds:
 
 - `main`: normal Jak 1 gameplay, based on OpenGOAL `v0.3.9`.
-- `jetboard`: JET-Board Legacy `v0.0.6` plus the shared personal changes.
+- `jetboard`: derives from `main`, adding the JET-Board Legacy `v0.0.6` board
+  and a rigid attachment for the board stowed on Jak's back.
 
 Both include Aloqas's Refreshed HUD 1.0, a Start/Circle/Cross skip for the
 Jak and Daxter title animation into the normal village flyover, and an
@@ -17,9 +18,10 @@ its loading commands remain intact.
 
 ## Build on an x86-64 Linux machine
 
-Use the matching release's executables: OpenGOAL v0.3.9 for `main`, or JET-Board
-Legacy v0.0.6 for `jetboard`. The build does not need C++ compilation. It uses
-the supplied `goalc` and `extractor` to compile the GOAL sources and rebuild
+Use OpenGOAL v0.3.9 executables for `main`. For `jetboard`, build `gk`, `goalc`
+and `extractor` from this branch: its compiler includes the board sound-bank
+builder. The original board release's compiler cannot compile the newer base.
+The helper uses these executables to compile the GOAL sources and rebuild
 assets with the bundled HUD textures.
 
 ```bash
@@ -42,10 +44,9 @@ They do not import or modify existing saves.
 
 ## Shared changes
 
-JET-Board uses its own older OpenGOAL toolchain and custom model/animation
-pipeline. Keep its release source as its base. Apply shared feature commits
-from `main` with `git cherry-pick`; do not merge the entire newer upstream
-release into the older mod without reviewing compatibility.
+Keep shared changes on `main` and merge them into `jetboard`. The board branch
+inherits those commits directly and adds its board code, assets, sound-bank
+builder and attachment fix.
 
 ## HUD provenance
 

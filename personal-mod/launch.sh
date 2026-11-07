@@ -6,7 +6,7 @@ mod_build=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
   exit 1
 }
 # Keep personal mod settings and saves apart from the existing installations.
-mod_config="${XDG_CONFIG_HOME:-$HOME/.config}/jak1-personal/normal"
+mod_config="${XDG_CONFIG_HOME:-$HOME/.config}/jak1-personal/jetboard"
 mkdir -p -- "$mod_config"
 cd -- "$mod_build"
 exec ./gk --game jak1 --proj-path "$mod_build/data" --config-path "$mod_config" -- -boot "$@"

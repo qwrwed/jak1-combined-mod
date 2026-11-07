@@ -195,6 +195,8 @@
    (discord-rpc?                     symbol) ;; enable discord rich presence integration
    (speedrunner-mode?                symbol) ;; enable speedrunner mode
    (flava-hack                       int64)
+   ;; og:j1-board added
+   (skip-fuel-cell-anim?             symbol)
    ;; settings originally stored in the game save
    ;; now stored in pc-settings
    (memcard-volume-sfx               float)
