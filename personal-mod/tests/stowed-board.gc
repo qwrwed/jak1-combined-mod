@@ -23,7 +23,8 @@
     (set-vector! (-> chest-rest vector 3) (meters 2) (meters -1) (meters 3) 1.0)
     (matrix-rotate-x! offset (degrees 35))
     (set-vector! (-> offset vector 3) (meters 0.02) (meters 0.225) (meters -0.266) 1.0)
-    (matrix*! strap-rest chest-rest offset)
+    ;; Local attachment first, then the parent world transform (row vectors).
+    (matrix*! strap-rest offset chest-rest)
     (matrix-4x4-inverse! chest-bind chest-rest)
     (matrix-4x4-inverse! strap-bind strap-rest)
 
@@ -46,7 +47,10 @@
                    (meters 0.8)
                    (* (the float pose) (meters -0.7))
                    1.0)
-      (matrix*! expected chest-world offset)
+      ;; Build the expected rows by transforming vectors independently of the
+      ;; matrix composition helper, so its multiplication order is tested.
+      (dotimes (row 4)
+        (vector-matrix*! (-> expected vector row) (-> offset vector row) chest-world))
       (board-stowed-matrix! actual chest-world chest-bind strap-bind)
       (when (not (personal-board-matrix-close? actual expected))
         (format #t "STOWED_BOARD_TEST_FAIL torso pose ~D~%" pose)

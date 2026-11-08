@@ -11,11 +11,13 @@ Jak's back. Instead, the code derives a fixed chest-to-strap transform from the
 normal skeleton's reference pose:
 
 ```text
-fixed offset = chest inverse-bind × inverse(strap inverse-bind)
-board world transform = animated chest world transform × fixed offset
+fixed offset = inverse(strap inverse-bind) × chest inverse-bind
+board world transform = fixed offset × animated chest world transform
 ```
 
-This preserves the strap attachment's reference position and angle, but never
+These equations follow the engine's row-vector convention: local transforms
+compose before parent/world transforms. This preserves the strap attachment's
+reference position and angle, but never
 reads the strap's animated transform. The offset does not depend on which frame
 Jak is in when the board is put away. Board scaling remains on the existing
 path, and the riding joint and boarding animations are unchanged.
@@ -27,7 +29,10 @@ there are no guessed positional or angular constants.
 
 `personal-mod/tests/stowed-board.gc` checks the actual GOAL matrix helper against
 a known reference attachment and six rotated/translated torso poses. It also
-checks that the fixture detects a reversed bind relationship. The test is loaded
+checks that the fixture detects a reversed bind relationship. Its expected
+animated matrices are built by independently transforming the four offset rows.
+These numeric checks do not establish visual correctness with real assets.
+The test is loaded
 into an isolated runtime through its compiler listener; it does not modify an
 installed game or save.
 
@@ -45,5 +50,11 @@ then run:
 Use a separate test process with its matching compiler and runtime; do not
 attach to a running personal game session.
 
-The reference placement is preserved; matching Jak 2/3's appearance exactly
-would require a separate placement adjustment.
+## Explicit-root actor import
+
+The Legacy board, rider and sidekick GLBs already contain their `align` and
+`prejoint` roots. The actor builder must preserve those indices rather than
+prepend another align joint. Geometry joints and animation channels use the
+same conditional prefix count. This keeps the board at node 47 and aligns
+skin weights with their intended bones. Models without an explicit align root
+retain the base importer's existing behavior.

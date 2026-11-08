@@ -131,19 +131,27 @@ Joint convert_joint(const GltfJoint& joint,
 }
 
 constexpr int kGltfToGameJointOffset = 1;
+
+static int gltf_joint_prefix_count(const std::vector<GltfJoint>& joints) {
+  // Legacy character/board assets already supply align and prejoint. Their
+  // animation channels, skin weights and GOAL node indices use that ordering.
+  return !joints.empty() && joints.front().name == "align" ? 0 : kGltfToGameJointOffset;
+}
+
 /*!
- * Convert GTLF joint list to game joint list.
- * Currently, this inserts a single "align" joint and places the root joint of the GLTF as the
- * prejoint. However, we might want to change this, to allow GLTF files to specify "align" at some
- * point.
+ * Preserve an explicit GLTF align joint. Otherwise insert the usual align
+ * joint and treat the GLTF root as prejoint.
  */
 std::vector<Joint> convert_joints(const std::vector<GltfJoint>& gjoints) {
   std::vector<Joint> joints;
-  joints.emplace_back("align", 0, -1, math::Matrix4f::identity());
-  ASSERT(kGltfToGameJointOffset == joints.size());
+  const int prefix_joint_count = gltf_joint_prefix_count(gjoints);
+  if (prefix_joint_count) {
+    joints.emplace_back("align", 0, -1, math::Matrix4f::identity());
+  }
+  ASSERT(prefix_joint_count == joints.size());
   for (int gjoint_idx = 0; gjoint_idx < int(gjoints.size()); gjoint_idx++) {
     // using -1 as the parent index since gltf's shouldn't be child of align.
-    joints.push_back(convert_joint(gjoints[gjoint_idx], gjoint_idx, kGltfToGameJointOffset, -1));
+    joints.push_back(convert_joint(gjoints[gjoint_idx], gjoint_idx, prefix_joint_count, -1));
   }
 
   return joints;
@@ -160,8 +168,9 @@ std::vector<anim::CompressedAnim> process_anim(const tinygltf::Model& model,
   }
 
   std::map<int, int> node_to_joint;
+  const int prefix_joint_count = gltf_joint_prefix_count(gjoints);
   for (size_t i = 0; i < gjoints.size(); i++) {
-    node_to_joint[gjoints[i].gltf_node_index] = i + kGltfToGameJointOffset;
+    node_to_joint[gjoints[i].gltf_node_index] = i + prefix_joint_count;
   }
 
   std::vector<anim::CompressedAnim> ret;
