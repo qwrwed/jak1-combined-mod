@@ -11,6 +11,8 @@
 (defun personal-board-attachment-test ()
   (let ((chest-rest (new 'stack-no-clear 'matrix))
         (offset (new 'stack-no-clear 'matrix))
+        (slant (new 'stack-no-clear 'matrix))
+        (flat (new 'stack-no-clear 'matrix))
         (strap-rest (new 'stack-no-clear 'matrix))
         (chest-bind (new 'stack-no-clear 'matrix))
         (strap-bind (new 'stack-no-clear 'matrix))
@@ -18,21 +20,33 @@
         (actual (new 'stack-no-clear 'matrix))
         (expected (new 'stack-no-clear 'matrix))
         (ok #t))
-    ;; A nontrivial reference pose and a known, fixed back attachment.
+    ;; A tilted reference attachment whose projected long direction is
+    ;; analytically (0.8,-0.6,0): Rx(35) * Rz(atan2(4,3)).
     (matrix-rotate-y! chest-rest (degrees 30))
     (set-vector! (-> chest-rest vector 3) (meters 2) (meters -1) (meters 3) 1.0)
     (matrix-rotate-x! offset (degrees 35))
+    (matrix-rotate-z! slant (degrees 53.130102))
+    (matrix*! offset offset slant)
     (set-vector! (-> offset vector 3) (meters 0.02) (meters 0.225) (meters -0.266) 1.0)
     ;; Local attachment first, then the parent world transform (row vectors).
     (matrix*! strap-rest offset chest-rest)
     (matrix-4x4-inverse! chest-bind chest-rest)
     (matrix-4x4-inverse! strap-bind strap-rest)
 
-    ;; At rest, the new attachment must exactly preserve the reference position
-    ;; and rotation, rather than dropping the board at the chest's origin.
+    ;; Independently specified flat target, with +Y mapped to chest +Z.
+    ;; This retains the diagonal and position, while changing the facing plane.
+    (set-vector! (-> flat vector 0) 0.6 0.8 0.0 0.0)
+    (set-vector! (-> flat vector 1) 0.0 0.0 1.0 0.0)
+    (set-vector! (-> flat vector 2) 0.8 -0.6 0.0 0.0)
+    (vector-copy! (-> flat vector 3) (-> offset vector 3))
+    (dotimes (row 4)
+      (vector-matrix*! (-> expected vector row) (-> flat vector row) chest-rest))
     (board-stowed-matrix! actual chest-rest chest-bind strap-bind)
-    (when (not (personal-board-matrix-close? actual strap-rest))
-      (format #t "STOWED_BOARD_TEST_FAIL reference placement~%")
+    (when (not (personal-board-matrix-close? actual expected))
+      (format #t "STOWED_BOARD_TEST_FAIL flat plane, diagonal or position~%")
+      (set! ok #f))
+    (when (personal-board-matrix-close? actual strap-rest)
+      (format #t "STOWED_BOARD_TEST_FAIL original outward tilt retained~%")
       (set! ok #f))
 
     ;; The same local attachment must hold through torso turns, bends, and
@@ -50,7 +64,7 @@
       ;; Build the expected rows by transforming vectors independently of the
       ;; matrix composition helper, so its multiplication order is tested.
       (dotimes (row 4)
-        (vector-matrix*! (-> expected vector row) (-> offset vector row) chest-world))
+        (vector-matrix*! (-> expected vector row) (-> flat vector row) chest-world))
       (board-stowed-matrix! actual chest-world chest-bind strap-bind)
       (when (not (personal-board-matrix-close? actual expected))
         (format #t "STOWED_BOARD_TEST_FAIL torso pose ~D~%" pose)
@@ -63,7 +77,7 @@
       (format #t "STOWED_BOARD_TEST_FAIL insensitive fixture~%")
       (set! ok #f))
     (when ok
-      (format #t "STOWED_BOARD_TEST_PASS reference placement and six torso poses~%"))
+      (format #t "STOWED_BOARD_TEST_PASS flat plane, preserved diagonal and position, six torso poses~%"))
     ok))
 
 (personal-board-attachment-test)

@@ -1532,13 +1532,22 @@
   (none))
 
 (defun board-stowed-matrix! ((dst matrix) (chest-world matrix) (chest-bind matrix) (strap-bind matrix))
-  "Attach at the strap's reference position, rigidly following the chest."
+  "Stow flat and diagonally across the back, rigidly following the chest."
   ;; Joint bind-pose matrices map model space into the joint's reference space.
   ;; The engine composes row-vector transforms local first, then parent.
   ;; inverse(strap-bind) * chest-bind is the constant chest-to-strap offset.
   ;; Do not read the strap's animated bone transform: it sways independently.
   (matrix-4x4-inverse! dst strap-bind)
   (matrix*! dst dst chest-bind)
+  ;; The board deck is XZ, with its long axis +Z and broad-face normal +Y.
+  ;; Keep the long axis's diagonal projection in the chest's XY back plane.
+  (set! (-> dst vector 2 z) 0.0)
+  (set! (-> dst vector 2 w) 0.0)
+  (vector-normalize! (-> dst vector 2) 1.0)
+  ;; This facing puts the board's underside outward. Reverse the width too
+  ;; to retain a right-handed basis. Leave the reference translation intact.
+  (set-vector! (-> dst vector 1) 0.0 0.0 1.0 0.0)
+  (vector-cross! (-> dst vector 0) (-> dst vector 1) (-> dst vector 2))
   (matrix*! dst dst chest-world))
 
 (defbehavior target-board-joint-points target ()
