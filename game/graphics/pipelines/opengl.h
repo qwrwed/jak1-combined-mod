@@ -61,7 +61,10 @@ class GLDisplay : public GfxDisplay {
   GLuint m_splash_texture = 0;
   GLuint m_splash_program = 0;
   GLuint m_splash_vao = 0;
+  bool m_splash_skip_ready = false;
   void init_splash();
+  bool splash_visible();
+  void update_splash_skip();
   void draw_splash(int fb_w, int fb_h);
 };
 
