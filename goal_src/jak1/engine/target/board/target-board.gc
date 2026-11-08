@@ -1531,6 +1531,15 @@
     (set-time! (-> self control last-time-of-stuck)))
   (none))
 
+(defun board-stowed-strap-hide-callback ((node cspace) (pose transformq))
+  ;; The loose backpack strap intersects the rigidly stowed board. Collapse
+  ;; its normal-character joint only while the board prop is present. The
+  ;; separate riding skeleton retains its original strap animation.
+  (when (and *target* (-> *target* board) (-> *target* board board))
+    (set-vector! (-> pose scale) 0.0 0.0 0.0 1.0))
+  (cspace<-parented-transformq-joint! node pose)
+  (none))
+
 (defun board-stowed-matrix! ((dst matrix) (chest-world matrix) (chest-bind matrix) (strap-bind matrix))
   "Stow flat and diagonally across the back, rigidly following the chest."
   ;; Joint bind-pose matrices map model space into the joint's reference space.
@@ -1560,6 +1569,7 @@
        (let ((chest (joint-node eichar-lod0-jg chest))
              (strap (joint-node eichar-lod0-jg packStrapTop))
              (attachment (new 'stack-no-clear 'matrix)))
+         (set! (-> strap param0) board-stowed-strap-hide-callback)
          (board-stowed-matrix! attachment
                                (-> chest bone transform)
                                (-> chest joint bind-pose)

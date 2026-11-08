@@ -67,7 +67,12 @@ changed state. A single-function `asm-file ... :load` override is useful for a
 temporary preview; save the source and rebuild the game archive before claiming
 the change will survive relaunch.
 
-Minor clipping at the centre of the stowed board remains a known limitation.
+While the board prop is present on the normal character skeleton, a joint
+callback collapses the loose backpack strap's scale at joint 67. This hides
+the strap that otherwise animates through the board's circular centre. The
+normal animation supplies a fresh pose each frame; when the prop is absent,
+the callback leaves that pose unchanged. The separate riding skeleton keeps
+its strap animation. This does not move or rotate the board.
 
 ## Explicit-root actor import
 
