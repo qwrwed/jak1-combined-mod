@@ -413,6 +413,29 @@ void GLDisplay::init_splash() {
   glGenVertexArrays(1, &m_splash_vao);
 }
 
+bool GLDisplay::splash_visible() {
+  return SplashScreen && Gfx::g_splash.ready.load() && !Gfx::g_splash.skipped.load() &&
+         SplashTimer.getSeconds() < SPLASH_SCREEN_TIME;
+}
+
+/*!
+ * Skip the splash on a fresh Start, Cross or Circle press, matching the intro skips.
+ * Releasing first stops a button held at launch from skipping it.
+ */
+void GLDisplay::update_splash_skip() {
+  if (!splash_visible()) {
+    return;
+  }
+  auto pad = m_input_manager->get_current_data(0);
+  bool held = pad && ((*pad)->start() || (*pad)->button_data.at(PadData::CROSS) ||
+                      (*pad)->button_data.at(PadData::CIRCLE));
+  if (!held) {
+    m_splash_skip_ready = true;
+  } else if (m_splash_skip_ready) {
+    Gfx::g_splash.skipped.store(true);
+  }
+}
+
 void GLDisplay::draw_splash(int fb_w, int fb_h) {
   if (!m_splash_program || !m_splash_texture)
     return;
@@ -652,8 +675,8 @@ void GLDisplay::render() {
     if (SplashScreen && DiskBoot && !m_splash_program) {
       init_splash();
     }
-    if (SplashScreen && Gfx::g_splash.ready.load() &&
-        SplashTimer.getSeconds() < SPLASH_SCREEN_TIME) {
+    update_splash_skip();
+    if (splash_visible()) {
       draw_splash(fbuf_w, fbuf_h);
     }
 

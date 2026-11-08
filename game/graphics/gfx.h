@@ -140,6 +140,7 @@ struct SplashScreen {
   int width = 0;
   int height = 0;
   std::atomic<bool> ready{false};
+  std::atomic<bool> skipped{false};
 };
 extern SplashScreen g_splash;
 

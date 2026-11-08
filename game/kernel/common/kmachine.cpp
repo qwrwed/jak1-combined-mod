@@ -119,7 +119,7 @@ void InitVideo() {
   Gfx::g_splash.height = kHeight;
   Gfx::g_splash.ready.store(true);
   SplashTimer.start();
-  while (SplashTimer.getSeconds() < SPLASH_SCREEN_TIME) {
+  while (SplashTimer.getSeconds() < SPLASH_SCREEN_TIME && !Gfx::g_splash.skipped.load()) {
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 }
