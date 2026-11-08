@@ -6,11 +6,11 @@
 Two branches produce separately launchable builds:
 
 - `main`: normal Jak 1 gameplay, based on OpenGOAL `v0.3.9`.
-- `jetboard`: derives from `main`, adding the JET-Board Legacy `v0.0.6` board and a rigid attachment for the board stowed on Jak's back.
+- `jetboard`: derives from `main`, adding Hat Kid's JET-Board Legacy `v0.0.6` board and a rigid attachment for the board stowed on Jak's back.
 
-Both include Aloqas's Refreshed HUD 1.0, a Start/Circle/Cross skip for the Jak and Daxter title animation into the normal village flyover, and an additional **Exit to Desktop** option in the pause settings menu. The existing quit-to-title action stays available. Exit uses the existing confirmation and shutdown handler; it does not perform a new manual save.
+Both include Aloqas's Refreshed HUD 1.0, a Start/Circle/Cross skip for the Sony splash, the same skip for the Jak and Daxter title animation into the normal village flyover, and an additional **Exit to Desktop** option in the pause settings menu. The existing quit-to-title action stays available. Exit uses the existing confirmation and shutdown handler; it does not perform a new manual save.
 
-The title skip waits for the previous skip button to be released first. Its callback uses the engine's existing spooled-animation cleanup; the flyover and its loading commands remain intact.
+Both skips wait for a held skip button to be released first. The title skip's callback uses the engine's existing spooled-animation cleanup; the flyover and its loading commands remain intact.
 
 ## Install through the OpenGOAL Launcher
 
@@ -50,12 +50,15 @@ The archive contains `gk`, `goalc`, `extractor`, and the source, configuration, 
 
 Keep shared changes on `main` and merge them into `jetboard`. The board branch inherits those commits directly and adds its board code, assets, sound-bank builder and attachment fix.
 
-## HUD provenance
+## Credits and provenance
 
-- Source: https://github.com/Aloqas/Jak-1-Refreshed-HUD
-- Release: `1.0`, standard PlayStation button artwork.
-- Asset: `Jak-1-Refreshed-HUD-1.0.zip`.
-- SHA-256: `e3ccefffe8d705a6bbdd9fe3dfb0eb9c30eb4bfb109330d60e3764f3c761d74c`.
-- The PNGs are imported unchanged into `custom_assets/jak1/texture_replacements`.
+- [OpenGOAL](https://github.com/open-goal/jak-project) `v0.3.9`: the base engine, compiler and tools for both branches.
+- Aloqas's [Refreshed HUD](https://github.com/Aloqas/Jak-1-Refreshed-HUD) `1.0`, used by both branches:
+  - Asset: `Jak-1-Refreshed-HUD-1.0.zip`, standard PlayStation button artwork.
+  - SHA-256: `e3ccefffe8d705a6bbdd9fe3dfb0eb9c30eb4bfb109330d60e3764f3c761d74c`.
+  - The PNGs are imported unchanged into `custom_assets/jak1/texture_replacements`.
+- Hat Kid's [JET-Board Legacy](https://github.com/Hat-Kid/og-j1-board) `v0.0.6`, used by `jetboard` only:
+  - The board code, assets and sound-bank builder are ported onto the `main` base.
+  - The stowed-board attachment and strap fixes are changes made in this repo.
 
 Personal use. No original game assets or generated game files are committed.
