@@ -72,7 +72,14 @@ callback collapses the loose backpack strap's scale at joint 67. This hides
 the strap that otherwise animates through the board's circular centre. The
 normal animation supplies a fresh pose each frame; when the prop is absent,
 the callback leaves that pose unchanged. The separate riding skeleton keeps
-its strap animation. This does not move or rotate the board.
+its own strap geometry. This does not move or rotate the board.
+
+The riding animations inherited from Legacy hold the strap joint in a fixed
+upward rotation. A separate callback on riding node 45 restores its local rest
+rotation, derived as inverse(joint inverse-bind) times parent inverse-bind.
+The result is converted to a quaternion while retaining animated translation
+and scale. This lets the strap hang down during riding. Board joint 47 and
+the normal character's stowed-strap callback remain on their existing paths.
 
 ## Explicit-root actor import
 

@@ -1531,6 +1531,16 @@
     (set-time! (-> self control last-time-of-stuck)))
   (none))
 
+(defun board-riding-strap-rest-callback ((node cspace) (pose transformq))
+  ;; Restore the riding strap's local rest rotation rather than the fixed
+  ;; upward rotation inherited by all riding animations.
+  (let ((reference (new 'stack-no-clear 'matrix)))
+    (matrix-4x4-inverse! reference (-> node joint bind-pose))
+    (matrix*! reference reference (-> node parent joint bind-pose))
+    (matrix->quat reference (-> pose quat)))
+  (cspace<-parented-transformq-joint! node pose)
+  (none))
+
 (defun board-stowed-strap-hide-callback ((node cspace) (pose transformq))
   ;; The loose backpack strap intersects the rigidly stowed board. Collapse
   ;; its normal-character joint only while the board prop is present. The
@@ -1563,6 +1573,7 @@
   (when (-> self board board)
     (cond
       ((= (-> self node-list) (-> self board-node-list))
+       (set! (-> self node-list data 45 param0) board-riding-strap-rest-callback)
        ;; Keep the riding/boarding animation's dedicated board joint unchanged.
        (matrix->transformq (-> self board board-tq) (-> self node-list data 47 bone transform)))
       (else
