@@ -3,14 +3,28 @@
 
 # Jak 1 Combined Mod
 
-Two branches produce separately launchable builds:
+## What it changes
 
-- `main`: normal Jak 1 gameplay, based on OpenGOAL `v0.3.9`.
-- `jetboard`: derives from `main`, adding Hat Kid's JET-Board Legacy `v0.0.6` board and a rigid attachment for the board stowed on Jak's back.
+Both variants:
 
-Both include Aloqas's Refreshed HUD 1.0, a Start/Circle/Cross skip for the Sony splash, the same skip for the Jak and Daxter title animation into the normal village flyover, and an additional **Exit to Desktop** option in the pause settings menu. The existing quit-to-title action stays available. Exit uses the existing confirmation and shutdown handler; it does not perform a new manual save.
+- **Refreshed HUD:** Aloqas's Refreshed HUD 1.0 textures.
+- **Skippable Sony splash:** press Start, Cross or Circle to end it.
+- **Skippable title cinematic:** press Start, Cross or Circle to skip the Jak and Daxter animation into the normal village flyover.
+- **Exit to Desktop:** an extra option in the pause settings menu. It uses the game's existing confirmation and shutdown, and does not save. Quit to title stays available.
 
-Both skips wait for a held skip button to be released first. The title skip's callback uses the engine's existing spooled-animation cleanup; the flyover and its loading commands remain intact.
+The Jetboard variant also has:
+
+- **JET-Board:** Hat Kid's JET-Board Legacy `v0.0.6` board.
+- **Rigid stowed board:** the board on Jak's back is fixed rigidly to Jak's chest.
+- **Hidden strap while stowed:** the loose backpack strap is hidden while the board is stowed, so it cannot clip through the board.
+- **Corrected riding strap:** the strap keeps its rest pose while riding.
+
+Both skips ignore a button already held when the scene starts. The title skip keeps the flyover and its loading intact.
+
+## Branches
+
+- `main` builds the Normal variant, based on OpenGOAL `v0.3.9`.
+- `jetboard` builds the Jetboard variant. It derives from `main` and adds the board.
 
 ## Install through the OpenGOAL Launcher
 
@@ -26,7 +40,7 @@ For an existing Steam shortcut, use the installed mod's `gk` and working directo
 
 ## Build on an x86-64 Linux machine
 
-Use OpenGOAL v0.3.9 executables for `main`. For `jetboard`, build `gk`, `goalc` and `extractor` from this branch: its compiler includes the board sound-bank builder. The original board release's compiler cannot compile the newer base. The helper uses these executables to compile the GOAL sources and rebuild assets with the bundled HUD textures.
+For `main`, build `gk` from this branch, since the splash skip is in the runtime; OpenGOAL v0.3.9's `goalc` and `extractor` work unchanged. For `jetboard`, build `gk`, `goalc` and `extractor` from this branch: its compiler includes the board sound-bank builder. The original board release's compiler cannot compile the newer base. The helper uses these executables to compile the GOAL sources and rebuild assets with the bundled HUD textures.
 
 ```bash
 bash personal-mod/build.sh /path/to/matching/tools /path/to/extracted/jak1 /path/to/new/build
