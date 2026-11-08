@@ -40,7 +40,7 @@ For an existing Steam shortcut, use the installed mod's `gk` and working directo
 
 ## Build on an x86-64 Linux machine
 
-Use OpenGOAL v0.3.9 executables for `main`. For `jetboard`, build `gk`, `goalc` and `extractor` from this branch: its compiler includes the board sound-bank builder. The original board release's compiler cannot compile the newer base. The helper uses these executables to compile the GOAL sources and rebuild assets with the bundled HUD textures.
+For `main`, build `gk` from this branch, since the splash skip is in the runtime; OpenGOAL v0.3.9's `goalc` and `extractor` work unchanged. For `jetboard`, build `gk`, `goalc` and `extractor` from this branch: its compiler includes the board sound-bank builder. The original board release's compiler cannot compile the newer base. The helper uses these executables to compile the GOAL sources and rebuild assets with the bundled HUD textures.
 
 ```bash
 bash personal-mod/build.sh /path/to/matching/tools /path/to/extracted/jak1 /path/to/new/build
