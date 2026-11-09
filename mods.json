@@ -1,16 +1,24 @@
 {
   "schemaVersion": "1.0.0",
   "sourceName": "Jak 1 Combined Mod",
-  "lastUpdated": "2026-11-08T21:30:00Z",
+  "lastUpdated": "2026-11-09T01:30:40Z",
   "mods": {
     "jak1-combined-mod-normal": {
       "displayName": "Jak 1 Combined Mod (Normal)",
-      "description": "Refreshed HUD textures, a skippable Sony splash and Jak and Daxter title cinematic, and Exit to Desktop in the pause settings.",
+      "description": "Refreshed HUD textures, a skippable Sony splash and Jak and Daxter title cinematic, a title menu over the still-playing flyover, and Exit to Desktop in the pause settings.",
       "authors": ["qwrwed"],
       "tags": ["gameplay-mod", "texture-pack"],
       "supportedGames": ["jak1"],
       "websiteUrl": "https://github.com/qwrwed/jak1-combined-mod",
       "versions": [
+        {
+          "version": "0.2.0",
+          "publishedDate": "2026-11-09T01:30:40Z",
+          "supportedGames": ["jak1"],
+          "assets": {
+            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-normal-v0.2.0/jak1-combined-mod-normal.tar.gz"
+          }
+        },
         {
           "version": "0.1.5",
           "publishedDate": "2026-11-08T21:30:00Z",
@@ -31,12 +39,20 @@
     },
     "jak1-combined-mod-jetboard": {
       "displayName": "Jak 1 Combined Mod (Jetboard)",
-      "description": "The Refreshed HUD, skippable Sony splash and Jak and Daxter title cinematic, and pause-menu Exit to Desktop, plus JET-Board Legacy with a rigid stowed board, hidden strap while stowed, and corrected strap pose while riding.",
+      "description": "The Refreshed HUD, skippable Sony splash and Jak and Daxter title cinematic, title menu over the still-playing flyover, and pause-menu Exit to Desktop, plus JET-Board Legacy with a rigid stowed board, hidden strap while stowed, and corrected strap pose while riding.",
       "authors": ["qwrwed"],
       "tags": ["gameplay-mod", "texture-pack"],
       "supportedGames": ["jak1"],
       "websiteUrl": "https://github.com/qwrwed/jak1-combined-mod",
       "versions": [
+        {
+          "version": "0.2.0",
+          "publishedDate": "2026-11-09T01:30:27Z",
+          "supportedGames": ["jak1"],
+          "assets": {
+            "linux": "https://github.com/qwrwed/jak1-combined-mod/releases/download/combined-v0.2.0/jak1-combined-mod-jetboard.tar.gz"
+          }
+        },
         {
           "version": "0.1.5",
           "publishedDate": "2026-11-08T20:55:00Z",
