@@ -1374,9 +1374,11 @@
         event)
   :enter
     (behavior ()
-      (sound-group-pause (sound-group sfx music dialog sog3 ambient sog5 sog6 sog7))
+      ;; the menu opened over the title flyover leaves its music and actors running
+      (when (not (title-menu-open?))
+        (sound-group-pause (sound-group sfx music dialog sog3 ambient sog5 sog6 sog7)))
       (logclear! (-> *setting-control* default process-mask) (process-mask pause menu))
-      (add-setting! 'process-mask 'set 0.0 (process-mask progress))
+      (if (not (title-menu-open?)) (add-setting! 'process-mask 'set 0.0 (process-mask progress)))
       (apply-settings *setting-control*)
       (sound-play "select-menu")
       (set-blackout-frames 0)

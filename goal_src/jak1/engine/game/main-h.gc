@@ -238,6 +238,8 @@
 
 (define-extern paused? (function symbol))
 
+(define-extern title-menu-open? (function symbol))
+
 (define-extern toggle-pause (function int))
 
 (defun-extern menu-respond-to-pause symbol)

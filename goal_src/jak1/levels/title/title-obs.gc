@@ -671,7 +671,8 @@
     (behavior ()
       (hide-hud-quick)
       ;; og:preserve-this PAL patch here
-      (when (cpad-pressed? 0 start)
+      ;; this state keeps running while the menu is open, so only Start with no menu opens it
+      (when (and (cpad-pressed? 0 start) (not *progress-process*))
         (set-setting! 'allow-progress #t 0.0 0)
         (apply-settings *setting-control*)
         (activate-progress *dproc* (progress-screen title))

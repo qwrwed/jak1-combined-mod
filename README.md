@@ -10,6 +10,7 @@ Both variants:
 - **Refreshed HUD:** Aloqas's Refreshed HUD 1.0 textures.
 - **Skippable Sony splash:** press Start, Cross or Circle to end it.
 - **Skippable title cinematic:** press Start, Cross or Circle to skip the Jak and Daxter animation into the normal village flyover.
+- **Title menu over the flyover:** the title screen's menu opens over the village flyover, which keeps playing with its music.
 - **Exit to Desktop:** an extra option in the pause settings menu. It uses the game's existing confirmation and shutdown, and does not save. Quit to title stays available.
 
 The Jetboard variant also has:
