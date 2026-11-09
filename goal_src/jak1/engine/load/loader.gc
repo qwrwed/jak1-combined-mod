@@ -523,7 +523,8 @@
 (defmethod clear-rec ((this external-art-control))
   "Clears the recent spool anims from the art control."
   (cond
-    ((!= *master-mode* 'game)
+    ;; the title flyover keeps requesting its parts under the menu, so clear them as in game mode
+    ((and (!= *master-mode* 'game) (not (title-menu-open?)))
      (dotimes (s5-0 3)
        (when (name= (-> this rec s5-0 name) "reserved")
          (case s5-0
@@ -645,11 +646,12 @@
         (kill-current-level-hint '() '() 'die)
         (level-hint-surpress!)
         (apply-settings *setting-control*)
-        (when (or (handle->process (-> *art-control* spool-lock)) (!= *master-mode* 'game))
+        ;; the menu opened over the title flyover does not hold back its streamed animation
+        (when (or (handle->process (-> *art-control* spool-lock)) (and (!= *master-mode* 'game) (not (title-menu-open?))))
           (cond
             (arg1 (when (!= (ja-group) arg1) (ja-channel-push! 1 (seconds 0.05)) (ja :group! arg1 :num! min)))
             (else (ja-channel-set! 0)))
-          (while (or (handle->process (-> *art-control* spool-lock)) (!= *master-mode* 'game))
+          (while (or (handle->process (-> *art-control* spool-lock)) (and (!= *master-mode* 'game) (not (title-menu-open?))))
             (format #t "WARNING: ---------------------> loader stall on lock~%")
             (if (arg3 self) (goto cfg-88))
             (spool-push *art-control* (-> arg0 name) spool-part self -9.0)

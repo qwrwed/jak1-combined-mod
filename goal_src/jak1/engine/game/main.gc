@@ -68,11 +68,17 @@
 ;; Pause/Master Mode
 ;;;;;;;;;;;;;;;;;;;;;
 
+(defun title-menu-open? ()
+  "Is the progress menu open over the title flyover?"
+  (the-as symbol (and *progress-process* *target* (= (-> *target* next-state name) 'target-title-wait))))
+
 (defun paused? ()
-  "Are we paused? True if *master-mode* = pause, progress is not hidden, or *master-mode* = menu"
+  "Are we paused? True if *master-mode* = pause, progress is not hidden, or *master-mode* = menu.
+   The menu opened over the title flyover does not pause it."
   (the-as symbol
           (or (= *master-mode* 'pause)
-              (or (and *progress-process* (not (hidden? (-> *progress-process* 0)))) (= *master-mode* 'menu)))))
+              (or (and *progress-process* (not (hidden? (-> *progress-process* 0))) (not (title-menu-open?)))
+                  (= *master-mode* 'menu)))))
 
 (defun movie? ()
   "Are we in a movie?"
