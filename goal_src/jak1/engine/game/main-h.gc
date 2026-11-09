@@ -238,6 +238,9 @@
 
 (define-extern paused? (function symbol))
 
+;; set while the progress menu that was opened over the title flyover exists, including while it closes
+(define *title-menu-open* #f)
+
 (define-extern title-menu-open? (function symbol))
 
 (define-extern toggle-pause (function int))

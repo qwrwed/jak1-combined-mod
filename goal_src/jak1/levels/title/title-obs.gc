@@ -676,6 +676,7 @@
         (set-setting! 'allow-progress #t 0.0 0)
         (apply-settings *setting-control*)
         (activate-progress *dproc* (progress-screen title))
+        (if *progress-process* (set! *title-menu-open* #t))
         (set-setting! 'allow-progress #f 0.0 0)
         (apply-settings *setting-control*))
       (when (and (< (mod (-> *display* real-frame-counter) 300) 270) (not *progress-process*))

@@ -456,6 +456,7 @@
     (set! (-> *progress-process* 0 nb-of-particles) 0)
     (deactivate (-> *progress-process* 0))
     (set! *progress-process* (the-as (pointer progress) #f))
+    (set! *title-menu-open* #f)
     (enable-level-text-file-loading))
   0
   (none))

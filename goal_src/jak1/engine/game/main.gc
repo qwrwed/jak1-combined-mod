@@ -70,7 +70,7 @@
 
 (defun title-menu-open? ()
   "Is the progress menu open over the title flyover?"
-  (the-as symbol (and *progress-process* *target* (= (-> *target* next-state name) 'target-title-wait))))
+  (the-as symbol (and *progress-process* *title-menu-open*)))
 
 (defun paused? ()
   "Are we paused? True if *master-mode* = pause, progress is not hidden, or *master-mode* = menu.
